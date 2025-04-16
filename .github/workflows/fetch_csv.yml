@@ -2,7 +2,7 @@ name: Fetch CSV and Generate JSON
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Run daily at midnight UTC
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 permissions:
@@ -78,6 +78,9 @@ jobs:
               print("No players data fetched.")
           EOF
 
+      - name: Debug: Inspect player_data.json
+        run: cat player_data.json || echo "player_data.json not found"
+
       - name: Configure Git
         run: |
           git config --local user.name "GitHub Action"
@@ -87,6 +90,7 @@ jobs:
         run: |
           git checkout -b update-player-data || git checkout update-player-data
           git add player_data.json
+          git status
           git commit -m "Update player_data.json with latest player information" || echo "No changes to commit"
           git push origin update-player-data
         env:
