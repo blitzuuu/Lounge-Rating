@@ -1,0 +1,254 @@
+Lounge Rating
+Data fetched successfully!
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="description" content="The official Mario Kart Wii ranked Lounge hosting quickly organized team and individual based events for both regular and custom tracks!" />
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript" />
+    <meta name="author" content="Mario Kart Wii Lounge" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5">
+        
+    <title>Mario Kart Wii Lounge</title>
+    <link rel="icon" href="/favicon.ico?v=10.0.4" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/favicon.ico?v=10.0.4" type="image/x-icon"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style_common.css?v=10.0.4" type="text/css" />
+    <link rel="stylesheet" href="/styles.css?v=10.0.4" type="text/css" />
+    <link rel="stylesheet" href="/shared.css?v=10.0.4" type="text/css" />
+    <link rel="stylesheet" href="/earth.css?v=10.0.4" type="text/css" />
+    <script type="text/javascript" src="/script.js?v=10.0.4"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/luxon@2.2.0/build/global/luxon.min.js"?></script>
+    <script>
+        var DateTime = luxon.DateTime;
+
+        function writeDateTimeAsLocale(date) {
+            document.write(DateTime.fromSQL(date, { zone: "utc" }).toLocal().toLocaleString(DateTime.DATETIME_MED));
+        }
+
+        function writeDateAsLocale(date) {
+            document.write(DateTime.fromSQL(date, { zone: "utc" }).toLocal().toLocaleString(DateTime.DATE_MED));
+        }
+    </script>    <script type="text/javascript" src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
+</head>
+<body>
+    <div class="earth_content">
+    <div id="earth"></div>    
+</div>
+
+
+<!-- Navigazione desktop -->
+    <div id="bar">
+        <ul id="navbar">
+            <li>
+                <a  href="index.php?ladder_id=15&hide_unranked=0" accesskey="l">
+                    <div class="container_both">
+                        <div class="both_part">
+                            <img src="/images/leaderboard.svg?v=10.0.4" class="img_next" />
+                        </div>
+                        <div class="both_part">
+                            Leaderboard
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a  href="events.php?ladder_id=15" accesskey="e">
+                    <div class="container_both">
+                        <div class="both_part">
+                            <img src="/images/history.svg?v=10.0.4" class="img_next" />
+                        </div>
+                        <div class="both_part">
+                            Event History
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a  href="notables.php?ladder_id=15" accesskey="e">
+                    <div class="container_both">
+                        <div class="both_part">
+                            <img src="/images/notables.svg?v=10.0.4" class="img_next" />
+                        </div>
+                        <div class="both_part">
+                            Notables
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a  href="statistics.php?ladder_id=15" accesskey="s">
+                    <div class="container_both">
+                        <div class="both_part">
+                            <img src="/images/statistics.svg?v=10.0.4" class="img_next" />
+                        </div>
+                        <div class="both_part">
+                            Statistics
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a  href="data.php?ladder_id=15" accesskey="c">
+                    <div class="container_both">
+                        <div class="both_part">
+                            <img src="/images/csv.svg?v=10.0.4" class="img_next" />
+                        </div>
+                        <div class="both_part">
+                            Data
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a  href="tabler.php?ladder_id=15" accesskey="s">
+                    <div class="container_both">
+                        <div class="both_part">
+                            <img src="/images/calculator.svg?v=10.0.4" class="img_next" />
+                        </div>
+                        <div class="both_part">
+                            Event Tabler
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="/invite" accesskey="d">
+                    <div class="container_both">
+                        <div class="both_part">
+                            <img src="/images/discord.svg?v=10.0.4" class="img_next" />
+                        </div>
+                        <div class="both_part">
+                            Discord
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Navigazione mobile -->
+    <div id="hamburger" onclick="showMenu();">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <div id="fullbar">
+        <div class="section_close">
+            <img src="/images/close.svg" id="close" onclick="hideMenu()" />
+        </div>
+
+        <div class="section" onclick="location.href = 'index.php?ladder_id=15&hide_unranked=1'">
+            <div class="image">
+                <img src="/images/leaderboard.svg?v=10.0.4" />
+            </div>
+            <div class="text">
+                Leaderboard
+            </div>
+        </div>
+
+        <div class="section" onclick="location.href = 'events.php?ladder_id=15';">
+            <div class="image">
+                <img src="/images/history.svg?v=10.0.4" />
+            </div>
+            <div class="text">
+                Event History
+            </div>
+        </div>
+
+        <div class="section" onclick="location.href = 'notables.php?ladder_id=15';">
+            <div class="image">
+                <img src="/images/notables.svg?v=10.0.4" />
+            </div>
+            <div class="text">
+                Notables
+            </div>
+        </div>
+
+        <div class="section" onclick="location.href = 'statistics.php?ladder_id=15';">
+            <div class="image">
+                <img src="/images/statistics.svg?v=10.0.4" />
+            </div>
+            <div class="text">
+                Statistics
+            </div>
+        </div>
+
+        <div class="section" onclick="location.href = 'data.php?ladder_id=15';">
+            <div class="image">
+                <img src="/images/csv.svg?v=10.0.4" />
+            </div>
+            <div class="text">
+                Data
+            </div>
+        </div>
+
+        <div class="section" onclick="location.href = 'tabler.php?ladder_id=15';">
+            <div class="image">
+                <img src="/images/calculator.svg?v=10.0.4" />
+            </div>
+            <div class="text">
+                Event Tabler
+            </div>
+        </div>
+
+        <div class="section" onclick="location.href = '/invite';">
+            <div class="image">
+                <img src="/images/discord.svg?v=10.0.4" />
+            </div>
+            <div class="text">
+                Discord
+            </div>
+        </div>
+    </div>
+    
+
+
+<div class="content_container player_top"><div class='stats'><div class='box'><img src='https://i.imgur.com/GP12BYL.png' class='s100' height='100px' /></div><div class='mmr'><div class='datammr'><span style='color: #b0f442;'>DIVISION: </span>BRONZE, LOW TIER</div></div></div><div class='name'><div class='namebox'><img src="https://flagcdn.com/32x24/ca.png" width="32" height="24">&nbsp;blitzu&nbsp;</div><div class='mmr'><div class='datammr'><span style='color: #fc0'>SEASON 14 REGULAR TRACK OVERVIEW</span></div></div></div><div class='stats_r'><div class='row_stat'><span style='color: #4286f4;'>Rank</span>: 462 </div><div class='row_stat'><span style='color: #4286f4;'>Percentile</span>: 53rd</div><div class='row_stat'><span style='color: #4286f4;'>Peak</span>: 3061 <span style='color: #4286f4;'>Lowest</span>: 1820</div></div></div><div class='content_container profile_misc_tracks' style='text-align: center;'><div style='padding: 10px;'>Other Profile: <br>RT: <a href='player.php?ladder_id=13&player_id=5402'>Season 13</a>  | <a href='player.php?ladder_id=11&player_id=5402'>Season 12</a> <br>CT: <a href='player.php?ladder_id=16&player_id=5402'>Season 14</a>  | <a href='player.php?ladder_id=14&player_id=5402'>Season 13</a> <br></div></div><div class='content_container'><table class='profiletable'><tr class='bliner' style='background-color: #222 !important'><td style='width: 9%;'>Wins</td><td style='width: 9%;'>Losses</td><td style='width: 9%;'>Win %</td><td style='width: 9%;'>Max LR Gain</td><td style='width: 9%;'>Max LR Loss</td><td style='width: 9%;'>LR</td><td style='width: 9%;'>MMR</td><td style='width: 9%;'>Avg Score</td><td style='width: 9%;'>Std Dev Score</td><td style='width: 9%;'>Top Score</td><td style='width: 9%;'>Events</td></tr><tr class='bliner' style='background-color: rgba(22, 22, 22, 0.7) !important'><td style='color: rgba(176, 244, 66, 0.8);'>36</td><td style='color: rgba(229, 90, 43, 0.8);'>34</td><td>51.4</td><td>236</td><td>-184</td><td>2987</td><td>3035</td><td>74.5</td><td>21.3</td><td style='color: #ffff00;'>127</td><td>71</td></tr></table></div><div class='content_container'><table class='profiletable'><tr class='bliner' style='background-color: #222 !important'><td style='width: 16.67%;'>Win Streak</td><td style='width: 16.67%;'>Wins (Last 10)</td><td style='width: 16.67%;'>Losses (Last 10)</td><td style='width: 16.67%;'>Average (Last 10)</td><td style='width: 16.67%;'>Standard Dev (Last 10)</td><td style='width: 16.67%;'>Gain/Loss (Last 10)</td></tr><tr class='bliner' style='background-color: rgba(22, 22, 22, 0.7) !important'><td style='color: rgba(176, 244, 66, 0.8);'>1</td><td style='color: rgba(176, 244, 66, 0.8);'>4</td><td style='color: rgba(229, 90, 43, 0.8);'>6</td><td style="color: #e6eefb;">71.7</td><td>21.6</td><td style="color: #f9cb9c;">+26</td></tr></table></div><div class='content_container'>
+<table class="profiletable"><thead><tr class="bliner" style="background-color: #222 !important"><td style="width: 2%;">#</td><td style="width: 8%;">Date</td><td style="width: 8%;">Tier</td><td style="width: 8%;">Format</td><td style="width: 8%;">Rank</td><td style="width: 8%;">Score</td><td style="width: 8%;">Races Played</td><td style="width: 8%;">Result</td><td style="width: 8%;">+/-</td><td style="width: 8%;">MMR</td><td style="width: 8%;">+/-</td><td style="width: 8%;">LR</td></tr></thead><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>1</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89436&ladder_id=15'><script>writeDateAsLocale("2025-04-15 18:06:14");</script></a></td><td>Tier 1</td><td>2v2</td><td>1st</td><td>101</td><td>12</td><td>Win</td><td>+240</td><td>3035</td><td>+181</td><td>2987</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>2</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89418&ladder_id=15'><script>writeDateAsLocale("2025-04-15 07:18:25");</script></a></td><td>Tier 2</td><td>2v2</td><td>4th</td><td>49</td><td>12</td><td>Loss</td><td>-126</td><td>2795</td><td>-62</td><td>2806</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>3</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89413&ladder_id=15'><script>writeDateAsLocale("2025-04-15 05:09:18");</script></a></td><td>Tier 1</td><td>2v2</td><td>1st</td><td>81</td><td>12</td><td>Win</td><td>+144</td><td>2921</td><td>+137</td><td>2868</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>4</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89384&ladder_id=15'><script>writeDateAsLocale("2025-04-14 20:46:22");</script></a></td><td>Tier 2</td><td>2v2</td><td>2nd</td><td>90</td><td>12</td><td>Win</td><td>+199</td><td>2777</td><td>+130</td><td>2731</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>5</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89372&ladder_id=15'><script>writeDateAsLocale("2025-04-14 18:10:25");</script></a></td><td>Tier 1</td><td>2v2</td><td>1st</td><td>96</td><td>12</td><td>Win</td><td>+241</td><td>2578</td><td>+177</td><td>2601</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>6</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89349&ladder_id=15'><script>writeDateAsLocale("2025-04-14 05:02:29");</script></a></td><td>Tier 2</td><td>3v3</td><td>4th</td><td>33</td><td>12</td><td>Loss</td><td>-263</td><td>2337</td><td>-184</td><td>2424</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>7</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89343&ladder_id=15'><script>writeDateAsLocale("2025-04-14 03:32:15");</script></a></td><td>Squad Queue</td><td>2v2</td><td>5th</td><td>48</td><td>12</td><td>Loss</td><td>-216</td><td>2600</td><td>-132</td><td>2608</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>8</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89336&ladder_id=15'><script>writeDateAsLocale("2025-04-14 01:36:48");</script></a></td><td>Tier 2</td><td>2v2</td><td>5th</td><td>69</td><td>12</td><td>Loss</td><td>-133</td><td>2816</td><td>-99</td><td>2740</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>9</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89300&ladder_id=15'><script>writeDateAsLocale("2025-04-13 15:41:20");</script></a></td><td>Tier 2</td><td>2v2</td><td>5th</td><td>85</td><td>12</td><td>Loss</td><td>-134</td><td>2949</td><td>-97</td><td>2839</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>10</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89271&ladder_id=15'><script>writeDateAsLocale("2025-04-13 03:43:16");</script></a></td><td>Squad Queue</td><td>2v2</td><td>4th</td><td>65</td><td>12</td><td>Loss</td><td>-46</td><td>3083</td><td>-25</td><td>2936</td></tr><tr class='thick' style='background-color: rgba(90, 90, 90, 0.6);'><td>11</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89231&ladder_id=15'><script>writeDateAsLocale("2025-04-12 22:14:47");</script></a></td><td>-</td><td>Penalty</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td><td>3129</td><td>-100</td><td>2961</td></tr><tr class='thick' style='background-color: rgba(90, 90, 90, 0.6);'><td>12</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89229&ladder_id=15'><script>writeDateAsLocale("2025-04-12 22:14:13");</script></a></td><td>-</td><td>Adjustment</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-150</td><td>3129</td><td>0</td><td>3061</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>13</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89205&ladder_id=15'><script>writeDateAsLocale("2025-04-12 20:09:19");</script></a></td><td>Tier 2</td><td>2v2</td><td>2nd</td><td>81</td><td>12</td><td>Win</td><td>+170</td><td>3279</td><td>+133</td><td>3061</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>14</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89196&ladder_id=15'><script>writeDateAsLocale("2025-04-12 18:03:11");</script></a></td><td>Squad Queue</td><td>2v2</td><td>3rd</td><td>94</td><td>12</td><td>Win</td><td>+66</td><td>3109</td><td>+55</td><td>2928</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>15</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89168&ladder_id=15'><script>writeDateAsLocale("2025-04-12 06:05:09");</script></a></td><td>Tier 2</td><td>2v2</td><td>3rd</td><td>65</td><td>12</td><td>Win</td><td>-3</td><td>3043</td><td>+29</td><td>2873</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>16</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89165&ladder_id=15'><script>writeDateAsLocale("2025-04-12 04:59:11");</script></a></td><td>Tier 3</td><td>FFA</td><td>12th</td><td>60</td><td>12</td><td>Loss</td><td>-265</td><td>3046</td><td>-167</td><td>2844</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>17</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89150&ladder_id=15'><script>writeDateAsLocale("2025-04-12 00:13:38");</script></a></td><td>Tier 2</td><td>2v2</td><td>2nd</td><td>75</td><td>12</td><td>Win</td><td>+172</td><td>3311</td><td>+139</td><td>3011</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>18</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89100&ladder_id=15'><script>writeDateAsLocale("2025-04-11 07:23:27");</script></a></td><td>Tier 2</td><td>2v2</td><td>2nd</td><td>72</td><td>12</td><td>Win</td><td>+117</td><td>3139</td><td>+115</td><td>2872</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>19</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89094&ladder_id=15'><script>writeDateAsLocale("2025-04-11 04:51:03");</script></a></td><td>Tier 2</td><td>2v2</td><td>2nd</td><td>84</td><td>12</td><td>Win</td><td>+187</td><td>3022</td><td>+141</td><td>2757</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>20</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89051&ladder_id=15'><script>writeDateAsLocale("2025-04-10 08:41:10");</script></a></td><td>Tier 3</td><td>3v3</td><td>1st</td><td>63</td><td>12</td><td>Win</td><td>+410</td><td>2835</td><td>+224</td><td>2616</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>21</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=89050&ladder_id=15'><script>writeDateAsLocale("2025-04-10 07:40:17");</script></a></td><td>Tier 3</td><td>2v2</td><td>2nd</td><td>107</td><td>12</td><td>Win</td><td>+339</td><td>2425</td><td>+173</td><td>2392</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>22</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88992&ladder_id=15'><script>writeDateAsLocale("2025-04-09 05:07:44");</script></a></td><td>Tier 2</td><td>2v2</td><td>4th</td><td>56</td><td>12</td><td>Loss</td><td>-136</td><td>2086</td><td>-82</td><td>2219</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>23</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88939&ladder_id=15'><script>writeDateAsLocale("2025-04-08 01:21:49");</script></a></td><td>Tier 2</td><td>2v2</td><td>6th</td><td>59</td><td>12</td><td>Loss</td><td>-228</td><td>2222</td><td>-182</td><td>2301</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>24</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88921&ladder_id=15'><script>writeDateAsLocale("2025-04-07 20:31:10");</script></a></td><td>Tier 2</td><td>2v2</td><td>4th</td><td>64</td><td>12</td><td>Loss</td><td>-75</td><td>2450</td><td>-48</td><td>2483</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>25</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88887&ladder_id=15'><script>writeDateAsLocale("2025-04-07 05:01:57");</script></a></td><td>Tier 1</td><td>2v2</td><td>4th</td><td>67</td><td>12</td><td>Loss</td><td>-82</td><td>2525</td><td>-49</td><td>2531</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>26</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88876&ladder_id=15'><script>writeDateAsLocale("2025-04-07 01:18:05");</script></a></td><td>Tier 3</td><td>2v2</td><td>6th</td><td>44</td><td>12</td><td>Loss</td><td>-252</td><td>2607</td><td>-182</td><td>2580</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>27</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88824&ladder_id=15'><script>writeDateAsLocale("2025-04-06 13:38:43");</script></a></td><td>Squad Queue</td><td>2v2</td><td>5th</td><td>60</td><td>12</td><td>Loss</td><td>-162</td><td>2859</td><td>-108</td><td>2762</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>28</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88812&ladder_id=15'><script>writeDateAsLocale("2025-04-06 07:17:12");</script></a></td><td>Tier 2</td><td>2v2</td><td>2nd</td><td>76</td><td>12</td><td>Win</td><td>+210</td><td>3021</td><td>+141</td><td>2870</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>29</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88809&ladder_id=15'><script>writeDateAsLocale("2025-04-06 06:16:13");</script></a></td><td>Squad Queue</td><td>2v2</td><td>1st</td><td>127</td><td>12</td><td>Win</td><td>+173</td><td>2811</td><td>+151</td><td>2729</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>30</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88808&ladder_id=15'><script>writeDateAsLocale("2025-04-06 06:15:59");</script></a></td><td>Tier 1</td><td>4v4</td><td>2nd</td><td>100</td><td>12</td><td>Loss</td><td>-21</td><td>2638</td><td>-3</td><td>2578</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>31</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88793&ladder_id=15'><script>writeDateAsLocale("2025-04-06 00:19:13");</script></a></td><td>Tier 1</td><td>2v2</td><td>6th</td><td>49</td><td>12</td><td>Loss</td><td>-81</td><td>2659</td><td>-117</td><td>2581</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>32</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88778&ladder_id=15'><script>writeDateAsLocale("2025-04-05 19:27:55");</script></a></td><td>Tier 1</td><td>FFA</td><td>3rd</td><td>94</td><td>12</td><td>Win</td><td>+109</td><td>2740</td><td>+80</td><td>2698</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>33</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88722&ladder_id=15'><script>writeDateAsLocale("2025-04-04 23:02:27");</script></a></td><td>Tier 2</td><td>2v2</td><td>3rd</td><td>74</td><td>12</td><td>Win</td><td>+36</td><td>2631</td><td>+33</td><td>2618</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>34</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88683&ladder_id=15'><script>writeDateAsLocale("2025-04-04 10:08:06");</script></a></td><td>Tier 2</td><td>4v4</td><td>2nd</td><td>74</td><td>12</td><td>Win</td><td>+77</td><td>2595</td><td>+18</td><td>2585</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>35</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88624&ladder_id=15'><script>writeDateAsLocale("2025-04-03 07:17:39");</script></a></td><td>Tier 1</td><td>2v2</td><td>3rd</td><td>95</td><td>12</td><td>Loss</td><td>-51</td><td>2518</td><td>-9</td><td>2567</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>36</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88608&ladder_id=15'><script>writeDateAsLocale("2025-04-03 01:26:03");</script></a></td><td>Tier 1</td><td>2v2</td><td>2nd</td><td>90</td><td>12</td><td>Win</td><td>+83</td><td>2569</td><td>+82</td><td>2576</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>37</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88567&ladder_id=15'><script>writeDateAsLocale("2025-04-02 06:20:24");</script></a></td><td>Tier 1</td><td>2v2</td><td>5th</td><td>67</td><td>12</td><td>Loss</td><td>-249</td><td>2486</td><td>-141</td><td>2494</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>38</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88560&ladder_id=15'><script>writeDateAsLocale("2025-04-02 05:00:01");</script></a></td><td>Tier 1</td><td>2v2</td><td>4th</td><td>95</td><td>12</td><td>Loss</td><td>-100</td><td>2735</td><td>-54</td><td>2635</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>39</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88552&ladder_id=15'><script>writeDateAsLocale("2025-04-02 01:29:27");</script></a></td><td>Tier 2</td><td>3v3</td><td>3rd</td><td>70</td><td>12</td><td>Loss</td><td>-51</td><td>2835</td><td>-40</td><td>2689</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>40</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88515&ladder_id=15'><script>writeDateAsLocale("2025-04-01 06:16:00");</script></a></td><td>Tier 2</td><td>2v2</td><td>3rd</td><td>82</td><td>12</td><td>Win</td><td>+87</td><td>2886</td><td>+61</td><td>2729</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>41</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88470&ladder_id=15'><script>writeDateAsLocale("2025-03-31 17:00:39");</script></a></td><td>Tier 2</td><td>2v2</td><td>2nd</td><td>62</td><td>12</td><td>Win</td><td>+155</td><td>2799</td><td>+121</td><td>2668</td></tr><tr class='thick' style='background-color: rgba(245, 200, 24, 0.6);'><td>42</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88454&ladder_id=15'><script>writeDateAsLocale("2025-03-31 06:33:03");</script></a></td><td>Tier 1</td><td>2v2</td><td>6th</td><td>15</td><td>5</td><td>Loss Prevented (Sub In)</td><td>+0</td><td>2644</td><td>+0</td><td>2547</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>43</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88450&ladder_id=15'><script>writeDateAsLocale("2025-03-31 04:56:27");</script></a></td><td>Tier 1</td><td>2v2</td><td>5th</td><td>66</td><td>12</td><td>Loss</td><td>-209</td><td>2644</td><td>-127</td><td>2547</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>44</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88400&ladder_id=15'><script>writeDateAsLocale("2025-03-30 17:02:53");</script></a></td><td>Squad Queue</td><td>3v3</td><td>3rd</td><td>63</td><td>12</td><td>Loss</td><td>-68</td><td>2853</td><td>-43</td><td>2674</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>45</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88371&ladder_id=15'><script>writeDateAsLocale("2025-03-30 06:11:15");</script></a></td><td>Squad Queue</td><td>2v2</td><td>6th</td><td>44</td><td>12</td><td>Loss</td><td>-254</td><td>2921</td><td>-170</td><td>2717</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>46</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88363&ladder_id=15'><script>writeDateAsLocale("2025-03-30 03:47:16");</script></a></td><td>Tier 1</td><td>2v2</td><td>2nd</td><td>125</td><td>12</td><td>Win</td><td>+177</td><td>3175</td><td>+134</td><td>2887</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>47</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88351&ladder_id=15'><script>writeDateAsLocale("2025-03-30 01:21:28");</script></a></td><td>Tier 1</td><td>2v2</td><td>3rd</td><td>102</td><td>12</td><td>Win</td><td>+24</td><td>2998</td><td>+44</td><td>2753</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>48</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88328&ladder_id=15'><script>writeDateAsLocale("2025-03-29 19:32:18");</script></a></td><td>Tier 3</td><td>2v2</td><td>5th</td><td>56</td><td>12</td><td>Loss</td><td>-124</td><td>2974</td><td>-83</td><td>2709</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>49</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88281&ladder_id=15'><script>writeDateAsLocale("2025-03-29 03:56:27");</script></a></td><td>Tier 2</td><td>3v3</td><td>1st</td><td>58</td><td>12</td><td>Win</td><td>+214</td><td>3098</td><td>+184</td><td>2792</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>50</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88274&ladder_id=15'><script>writeDateAsLocale("2025-03-29 01:24:16");</script></a></td><td>Tier 2</td><td>2v2</td><td>5th</td><td>63</td><td>12</td><td>Loss</td><td>-178</td><td>2884</td><td>-100</td><td>2608</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>51</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88221&ladder_id=15'><script>writeDateAsLocale("2025-03-28 06:13:29");</script></a></td><td>Tier 3</td><td>2v2</td><td>5th</td><td>53</td><td>12</td><td>Loss</td><td>-152</td><td>3062</td><td>-87</td><td>2708</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>52</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88218&ladder_id=15'><script>writeDateAsLocale("2025-03-28 05:14:34");</script></a></td><td>Tier 3</td><td>2v2</td><td>5th</td><td>70</td><td>12</td><td>Loss</td><td>-118</td><td>3214</td><td>-68</td><td>2795</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>53</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88209&ladder_id=15'><script>writeDateAsLocale("2025-03-28 02:34:27");</script></a></td><td>Tier 2</td><td>2v2</td><td>1st</td><td>86</td><td>12</td><td>Win</td><td>+309</td><td>3332</td><td>+236</td><td>2863</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>54</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88185&ladder_id=15'><script>writeDateAsLocale("2025-03-27 19:58:29");</script></a></td><td>Tier 1</td><td>2v2</td><td>1st</td><td>98</td><td>12</td><td>Win</td><td>+233</td><td>3023</td><td>+203</td><td>2627</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>55</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88179&ladder_id=15'><script>writeDateAsLocale("2025-03-27 16:57:52");</script></a></td><td>Tier 1</td><td>2v2</td><td>1st</td><td>91</td><td>12</td><td>Win</td><td>+157</td><td>2790</td><td>+171</td><td>2424</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>56</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88163&ladder_id=15'><script>writeDateAsLocale("2025-03-27 06:10:09");</script></a></td><td>Tier 1</td><td>2v2</td><td>4th</td><td>92</td><td>12</td><td>Loss</td><td>-68</td><td>2633</td><td>-17</td><td>2253</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>57</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88137&ladder_id=15'><script>writeDateAsLocale("2025-03-26 23:12:12");</script></a></td><td>Tier 2</td><td>2v2</td><td>3rd</td><td>85</td><td>12</td><td>Win</td><td>+66</td><td>2701</td><td>+72</td><td>2270</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>58</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88092&ladder_id=15'><script>writeDateAsLocale("2025-03-26 07:20:45");</script></a></td><td>Tier 1</td><td>2v2</td><td>1st</td><td>89</td><td>12</td><td>Win</td><td>+268</td><td>2635</td><td>+219</td><td>2198</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>59</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88088&ladder_id=15'><script>writeDateAsLocale("2025-03-26 06:04:34");</script></a></td><td>Tier 1</td><td>2v2</td><td>4th</td><td>88</td><td>12</td><td>Win</td><td>+56</td><td>2367</td><td>+25</td><td>1979</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>60</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88080&ladder_id=15'><script>writeDateAsLocale("2025-03-26 03:46:15");</script></a></td><td>Tier 1</td><td>FFA</td><td>8th</td><td>63</td><td>12</td><td>Loss</td><td>-141</td><td>2311</td><td>-69</td><td>1954</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>61</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88076&ladder_id=15'><script>writeDateAsLocale("2025-03-26 02:33:35");</script></a></td><td>Tier 2</td><td>3v3</td><td>1st</td><td>93</td><td>12</td><td>Win</td><td>+252</td><td>2452</td><td>+202</td><td>2023</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>62</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88061&ladder_id=15'><script>writeDateAsLocale("2025-03-25 23:01:05");</script></a></td><td>Tier 2</td><td>2v2</td><td>4th</td><td>54</td><td>12</td><td>Win</td><td>-17</td><td>2200</td><td>+1</td><td>1821</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>63</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88026&ladder_id=15'><script>writeDateAsLocale("2025-03-25 09:41:54");</script></a></td><td>Tier 3</td><td>2v2</td><td>5th</td><td>56</td><td>12</td><td>Loss</td><td>-77</td><td>2217</td><td>-51</td><td>1820</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>64</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88025&ladder_id=15'><script>writeDateAsLocale("2025-03-25 08:38:19");</script></a></td><td>Tier 2</td><td>2v2</td><td>6th</td><td>57</td><td>12</td><td>Loss</td><td>-233</td><td>2294</td><td>-147</td><td>1871</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>65</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=88023&ladder_id=15'><script>writeDateAsLocale("2025-03-25 07:22:36");</script></a></td><td>Tier 2</td><td>2v2</td><td>3rd</td><td>76</td><td>12</td><td>Win</td><td>+39</td><td>2527</td><td>+50</td><td>2018</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>66</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=87963&ladder_id=15'><script>writeDateAsLocale("2025-03-24 18:18:31");</script></a></td><td>Tier 2</td><td>2v2</td><td>6th</td><td>57</td><td>12</td><td>Loss</td><td>-236</td><td>2488</td><td>-144</td><td>1968</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>67</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=87942&ladder_id=15'><script>writeDateAsLocale("2025-03-24 07:18:59");</script></a></td><td>Tier 2</td><td>2v2</td><td>3rd</td><td>84</td><td>12</td><td>Win</td><td>+23</td><td>2724</td><td>+66</td><td>2112</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>68</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=87937&ladder_id=15'><script>writeDateAsLocale("2025-03-24 06:07:06");</script></a></td><td>Tier 2</td><td>2v2</td><td>4th</td><td>70</td><td>12</td><td>Win</td><td>-21</td><td>2701</td><td>+16</td><td>2046</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>69</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=87851&ladder_id=15'><script>writeDateAsLocale("2025-03-23 06:08:03");</script></a></td><td>Squad Queue</td><td>2v2</td><td>2nd</td><td>85</td><td>12</td><td>Win</td><td>+127</td><td>2722</td><td>+148</td><td>2030</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>70</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=87844&ladder_id=15'><script>writeDateAsLocale("2025-03-23 05:04:41");</script></a></td><td>Tier 2</td><td>2v2</td><td>5th</td><td>77</td><td>12</td><td>Loss</td><td>-173</td><td>2595</td><td>-72</td><td>1882</td></tr><tr class='thick' style='background-color: rgba(125, 202, 0, 0.6);'><td>71</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=87829&ladder_id=15'><script>writeDateAsLocale("2025-03-23 01:44:47");</script></a></td><td>Tier 2</td><td>2v2</td><td>4th</td><td>82</td><td>12</td><td>Win</td><td>-66</td><td>2768</td><td>+9</td><td>1954</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>72</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=87802&ladder_id=15'><script>writeDateAsLocale("2025-03-22 21:52:31");</script></a></td><td>Tier 2</td><td>2v2</td><td>5th</td><td>56</td><td>12</td><td>Loss</td><td>-169</td><td>2834</td><td>-62</td><td>1945</td></tr><tr class='thick' style='background-color: rgba(193, 66, 44, 0.6);'><td>73</td><td><a style='color: rgba(255, 255, 255, 0.8);' href='table.php?event_id=87788&ladder_id=15'><script>writeDateAsLocale("2025-03-22 20:04:11");</script></a></td><td>Tier 2</td><td>FFA</td><td>9th</td><td>8</td><td>2</td><td>Loss</td><td>-29</td><td>3003</td><td>-10</td><td>2007</td></tr><tr class="bliner" style="background-color: #222 !important"><td colspan="12"><a href="player.php?player_id=5402&ladder_id=15&full=1">View All</a></td></tr></table></div><div class='content_container profile_misc_strikes'><div class='msg'><span style='color: #09C'>Strikes</span>: 0 / <span style='color: #09C'>Limit</span>: 5</div><div class='warn'><span style='color: #09C'>Events until strike removal</span>: 3</div><div class='msg'><span style='color: #09C'>Awards/Penalties</span>: -100</div></div>
+
+
+
+<div class="content_container" style="background-color: rgba(22, 22, 22, 0.7); padding: 10px 10px 10px 10px;">
+    <p align="center" style="font-size: 1.3em; color: rgba(255, 255, 255, 1);">LR TREND - LAST 20 MATCHES</p>
+    <canvas id="lrChart" height="400" style="display: block; width: 100vw;"></canvas>
+</div>
+<script>
+var ctx = document.getElementById('lrChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],        datasets: [{
+            data: [2219, 2392, 2616, 2757, 2872, 3011, 2844, 2873, 2928, 3061, 2936, 2839, 2740, 2608, 2424, 2601, 2731, 2868, 2806, 2987],            pointBackgroundColor: '#09C',
+            borderColor: '#D8D8D8',
+            backgroundColor: 'rgba(22,22,22,0.5)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        legend: {
+            display: false
+        }
+    }
+});
+</script>
+    <div class="home" onclick="location.href = '/'">
+    <img src="/images/home.svg" />
+</div><!-- div style="width: 730px; margin: 0 auto 30px auto;">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-5550547855813830"
+         data-ad-slot="1790189788"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div --></body>
+</html>
