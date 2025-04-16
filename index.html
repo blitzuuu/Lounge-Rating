@@ -62,26 +62,31 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlText, "text/html");
 
-                // Update these selectors to match the structure in example.mhtml
-                const lrElement = doc.querySelector(".profiletable tr:nth-child(2) td:nth-child(2)"); // Adjust based on actual structure
-                const mmrElement = doc.querySelector(".profiletable tr:nth-child(3) td:nth-child(2)"); // Adjust based on actual structure
+                // Target the first row of the table
+                const firstRow = doc.querySelector(".profiletable tr.thick"); // First row with class 'thick'
 
-                if (lrElement && mmrElement) {
-                    const lrText = lrElement.textContent.trim(); // Example: "2987+181"
-                    const mmrText = mmrElement.textContent.trim(); // Example: "3035+240"
+                if (firstRow) {
+                    const cells = firstRow.querySelectorAll("td"); // Get all <td> cells in the row
 
-                    // Split into main value and change
-                    const [lr, lrChange] = lrText.split(/(?=[+-])/); // Matches values like "2987+181"
-                    const [mmr, mmrChange] = mmrText.split(/(?=[+-])/); // Matches values like "3035+240"
+                    // Extract data based on column positions
+                    const mmrChange = cells[8]?.textContent.trim(); // Column 9 (index 8)
+                    const mmr = cells[9]?.textContent.trim();       // Column 10 (index 9)
+                    const lrChange = cells[10]?.textContent.trim(); // Column 11 (index 10)
+                    const lr = cells[11]?.textContent.trim();       // Column 12 (index 11)
 
-                    // Format and display the data
-                    document.getElementById('status').textContent = "Data fetched successfully!";
-                    document.getElementById('status').className = "success";
+                    if (mmr && lr && mmrChange && lrChange) {
+                        // Format and display the data
+                        document.getElementById('status').textContent = "Data fetched successfully!";
+                        document.getElementById('status').className = "success";
 
-                    const formattedStats = `LR: ${lr}<sup>${lrChange}</sup>   MMR: ${mmr}<sup>${mmrChange}</sup>`;
-                    document.getElementById('player-stats').innerHTML = formattedStats;
+                        const formattedStats = `LR: ${lr}<sup>${lrChange}</sup>   MMR: ${mmr}<sup>${mmrChange}</sup>`;
+                        document.getElementById('player-stats').innerHTML = formattedStats;
+                    } else {
+                        document.getElementById('status').textContent = "Error: Could not find player stats.";
+                        document.getElementById('status').className = "error";
+                    }
                 } else {
-                    document.getElementById('status').textContent = "Error: Could not find player stats.";
+                    document.getElementById('status').textContent = "Error: Could not find the profile table row.";
                     document.getElementById('status').className = "error";
                 }
             } catch (error) {
