@@ -62,20 +62,17 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlText, "text/html");
 
-                // Extract LR
-                const lrElement = doc.querySelector(".profiletable tr:nth-child(2) td:nth-child(2)"); // Update selector based on actual structure
-                const lrChangeElement = doc.querySelector(".profiletable tr:nth-child(2) td:nth-child(3)"); // Update selector based on actual structure
-
-                // Extract MMR
-                const mmrElement = doc.querySelector(".profiletable tr:nth-child(3) td:nth-child(2)"); // Update selector based on actual structure
-                const mmrChangeElement = doc.querySelector(".profiletable tr:nth-child(3) td:nth-child(3)"); // Update selector based on actual structure
+                // Update these selectors to match the structure in example.mhtml
+                const lrElement = doc.querySelector(".profiletable tr:nth-child(2) td:nth-child(2)"); // Adjust based on actual structure
+                const mmrElement = doc.querySelector(".profiletable tr:nth-child(3) td:nth-child(2)"); // Adjust based on actual structure
 
                 if (lrElement && mmrElement) {
-                    const lr = lrElement.textContent.trim();
-                    const lrChange = lrChangeElement ? lrChangeElement.textContent.trim() : "0";
+                    const lrText = lrElement.textContent.trim(); // Example: "2987+181"
+                    const mmrText = mmrElement.textContent.trim(); // Example: "3035+240"
 
-                    const mmr = mmrElement.textContent.trim();
-                    const mmrChange = mmrChangeElement ? mmrChangeElement.textContent.trim() : "0";
+                    // Split into main value and change
+                    const [lr, lrChange] = lrText.split(/(?=[+-])/); // Matches values like "2987+181"
+                    const [mmr, mmrChange] = mmrText.split(/(?=[+-])/); // Matches values like "3035+240"
 
                     // Format and display the data
                     document.getElementById('status').textContent = "Data fetched successfully!";
