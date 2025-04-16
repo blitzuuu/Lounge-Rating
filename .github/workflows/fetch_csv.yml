@@ -1,0 +1,100 @@
+name: Fetch CSV and Generate JSON
+
+on:
+  schedule:
+    # Runs daily at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  fetch-csv:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository to work with files
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pip install requests
+
+      # Run the Python script
+      - name: Run script to fetch CSV and generate JSON
+        run: |
+          python3 <<EOF
+          import requests
+          import base64
+          import csv
+          import json
+          import os
+
+          # Constants
+          PROXY_URL = "https://api.allorigins.win/get?url="
+          CSV_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv"
+          OUTPUT_JSON_FILE = "player_data.json"
+
+          def fetch_and_process_csv():
+              try:
+                  # Fetch the CSV using the proxy
+                  full_url = PROXY_URL + CSV_URL
+                  response = requests.get(full_url)
+                  if not response.ok:
+                      raise Exception("Failed to fetch the CSV file.")
+
+                  # Decode the Base64 content
+                  data = response.json()
+                  base64_content = data['contents'].split(',')[1]
+                  csv_text = base64.b64decode(base64_content).decode('utf-8')
+
+                  # Parse the CSV and extract names and IDs
+                  reader = csv.reader(csv_text.splitlines())
+                  headers = next(reader)  # Extract headers
+                  player_name_index = headers.index("player_name")
+                  player_id_index = headers.index("player_id")
+
+                  # Store names and IDs in a dictionary
+                  players = []
+                  for row in reader:
+                      if len(row) > max(player_name_index, player_id_index):  # Ensure row has enough columns
+                          player_name = row[player_name_index].strip().replace('"', '')
+                          player_id = row[player_id_index].strip().replace('"', '')
+                          players.append({"name": player_name, "id": player_id})
+
+                  return players
+
+              except Exception as e:
+                  print(f"Error: {e}")
+                  return None
+
+          def save_to_json(data, file_path):
+              try:
+                  with open(file_path, "w") as json_file:
+                      json.dump(data, json_file, indent=4)
+                  print(f"Data successfully saved to {file_path}")
+              except Exception as e:
+                  print(f"Error saving data to JSON: {e}")
+
+          # Fetch and process the CSV
+          players = fetch_and_process_csv()
+          if players is not None:
+              # Save to JSON
+              save_to_json(players, OUTPUT_JSON_FILE)
+          EOF
+
+      # Commit the changes
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "actions@github.com"
+          git add player_data.json
+          git commit -m "Update player_data.json with latest player information"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
