@@ -24,11 +24,20 @@
     </style>
 </head>
 <body>
-    <div id="player-stats"></div> <!-- Only LR and MMR will be displayed here -->
+    <div id="player-stats">Loading...</div> <!-- Only LR and MMR will be displayed here -->
 
     <script>
         async function fetchAndUpdatePlayerStats() {
-            const playerId = 5402; // Replace with the desired player_id
+            // Get the 'player_id' from the URL query string
+            const params = new URLSearchParams(window.location.search);
+            const playerId = params.get('player_id');
+
+            // If no player_id is provided, display an error
+            if (!playerId) {
+                document.getElementById('player-stats').innerHTML = "Error: No player_id provided.";
+                return;
+            }
+
             const proxyUrl = "https://api.allorigins.win/get?url="; // CORS proxy
             const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
             const url = proxyUrl + encodeURIComponent(targetUrl);
