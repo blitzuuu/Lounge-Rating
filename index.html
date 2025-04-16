@@ -52,6 +52,8 @@
             const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=${ladderId}&player_id=${playerId}`;
             const url = proxyUrl + encodeURIComponent(targetUrl);
 
+            console.log("Constructed URL:", url); // Log the constructed URL for debugging
+
             try {
                 const response = await fetch(url, {
                     headers: {
@@ -61,14 +63,23 @@
 
                 if (response.ok) {
                     const htmlText = await response.text();
-                    document.getElementById('status').textContent = "Data fetched successfully!";
-                    document.getElementById('status').className = "success";
 
-                    // Display the raw HTML response for debugging purposes
-                    document.getElementById('results').textContent = htmlText;
+                    // Check if the response contains the "This player does not exist" error
+                    if (htmlText.includes("This player does not exist")) {
+                        document.getElementById('status').textContent = "Error: This player does not exist.";
+                        document.getElementById('status').className = "error";
+                        console.error("Server response indicates the player ID does not exist.");
+                    } else {
+                        document.getElementById('status').textContent = "Data fetched successfully!";
+                        document.getElementById('status').className = "success";
+
+                        // Display the raw HTML response for debugging purposes
+                        document.getElementById('results').textContent = htmlText;
+                    }
                 } else {
                     document.getElementById('status').textContent = "Failed to fetch data. Status: " + response.status;
                     document.getElementById('status').className = "error";
+                    console.error("Failed to fetch data. HTTP Status:", response.status, response.statusText);
                 }
             } catch (error) {
                 console.error("Error fetching player data:", error);
