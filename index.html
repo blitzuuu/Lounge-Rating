@@ -6,51 +6,40 @@
     <title>Lounge Rating</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-            text-align: center;
             margin: 0;
             padding: 0;
+            background-color: transparent; /* Transparent background */
+            font-family: Arial, sans-serif;
         }
-        h1 {
-            margin: 20px 0;
-        }
-        p {
+        #player-stats {
+            position: absolute;
+            top: 10px; /* Position at the top-left corner */
+            left: 10px;
+            color: black; /* Black text */
             font-size: 18px;
         }
-        .error {
-            color: red;
-        }
-        .success {
-            color: lightgreen;
-        }
-        #results {
-            margin-top: 20px;
-            white-space: pre-wrap;
-            text-align: left;
+        sup {
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <h1>Lounge Rating</h1>
-    <p id="status">Fetching data...</p>
-    <div id="player-data"></div>
+    <div id="player-stats">Loading...</div> <!-- Only LR and MMR will be displayed here -->
 
     <script>
-        async function fetchAndParsePlayerData() {
+        async function fetchAndUpdatePlayerStats() {
             const params = new URLSearchParams(window.location.search);
             let playerId = params.get('id');
             const playerName = params.get('name');
 
-            // Check if both name and id are missing
+            // If no 'id' or 'name' is provided, display an error
             if (!playerId && !playerName) {
-                document.getElementById('status').textContent = "Please specify 'id' or 'name' in the URL, e.g., ?id=5402 or ?name=SamplePlayer";
+                document.getElementById('player-stats').innerHTML = "Error: Provide 'id' or 'name' in the URL.";
                 return;
             }
 
             try {
-                // If name is provided, fetch the CSV to find the corresponding id
+                // If 'name' is provided, fetch the CSV to resolve 'id'
                 if (playerName && !playerId) {
                     const proxyUrl = "https://api.allorigins.win/get?url=";
                     const csvUrl = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv";
@@ -74,14 +63,12 @@
                     const matchingRow = rows.find(row => row[playerIndex]?.replace(/"/g, '').toLowerCase() === playerName.toLowerCase());
                     if (matchingRow) {
                         playerId = matchingRow[idIndex];
-                        document.getElementById('status').textContent = `Found id for "${playerName}": ${playerId}`;
-                        document.getElementById('status').className = "success";
                     } else {
                         throw new Error(`Player "${playerName}" not found in the CSV.`);
                     }
                 }
 
-                // Fetch player data using the id
+                // Fetch player data using the resolved or provided 'id'
                 if (playerId) {
                     const proxyUrl = "https://api.allorigins.win/get?url="; // CORS proxy
                     const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
@@ -89,32 +76,44 @@
 
                     const response = await fetch(url);
                     const data = await response.json();
-                    const htmlText = data.contents; // Extract the HTML response
+                    const htmlText = data.contents;
 
                     // Parse the HTML response
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(htmlText, "text/html");
 
-                    // Example: Extract player stats from a specific table
-                    const playerTable = doc.querySelector("table.profiletable");
-                    if (playerTable) {
-                        document.getElementById('status').textContent = "Data fetched successfully!";
-                        document.getElementById('status').className = "success";
+                    // Target the first row of the table
+                    const firstRow = doc.querySelector(".profiletable tr.thick"); // First row with class 'thick'
 
-                        // Display the table
-                        document.getElementById('player-data').innerHTML = playerTable.outerHTML;
+                    if (firstRow) {
+                        const cells = firstRow.querySelectorAll("td");
+
+                        // Extract data based on column positions
+                        const mmrChange = cells[8]?.textContent.trim();
+                        const mmr = cells[9]?.textContent.trim();
+                        const lrChange = cells[10]?.textContent.trim();
+                        const lr = cells[11]?.textContent.trim();
+
+                        if (mmr && lr && mmrChange && lrChange) {
+                            // Format the data
+                            const formattedStats = `LR: ${lr}<sup>${lrChange}</sup>   MMR: ${mmr}<sup>${mmrChange}</sup>`;
+                            document.getElementById('player-stats').innerHTML = formattedStats;
+                        } else {
+                            document.getElementById('player-stats').innerHTML = "Error: Could not find player stats.";
+                        }
                     } else {
-                        throw new Error("Could not find player data on the site.");
+                        document.getElementById('player-stats').innerHTML = "Error: Could not find the profile table row.";
                     }
                 }
             } catch (error) {
                 console.error("Error:", error);
-                document.getElementById('status').textContent = error.message;
-                document.getElementById('status').className = "error";
+                document.getElementById('player-stats').innerHTML = error.message;
             }
         }
 
-        window.onload = fetchAndParsePlayerData;
+        // Fetch data and update periodically (every 30 seconds)
+        fetchAndUpdatePlayerStats(); // Initial fetch
+        setInterval(fetchAndUpdatePlayerStats, 30000); // Update every 30 seconds
     </script>
 </body>
 </html>
