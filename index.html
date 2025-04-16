@@ -22,6 +22,14 @@
         .error {
             color: red;
         }
+        .success {
+            color: lightgreen;
+        }
+        #results {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +48,9 @@
             }
 
             const ladderId = 15; // Fixed ladder ID
-            const url = `https://mkwlounge.gg/ladder/player.php?ladder_id=${ladderId}&player_id=${playerId}`;
+            const proxyUrl = "https://corsproxy.io/?"; // CORS proxy URL
+            const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=${ladderId}&player_id=${playerId}`;
+            const url = proxyUrl + encodeURIComponent(targetUrl);
 
             try {
                 const response = await fetch(url, {
@@ -52,15 +62,18 @@
                 if (response.ok) {
                     const htmlText = await response.text();
                     document.getElementById('status').textContent = "Data fetched successfully!";
-                    
-                    // Display the raw HTML response for debugging
+                    document.getElementById('status').className = "success";
+
+                    // Display the raw HTML response for debugging purposes
                     document.getElementById('results').textContent = htmlText;
                 } else {
                     document.getElementById('status').textContent = "Failed to fetch data. Status: " + response.status;
+                    document.getElementById('status').className = "error";
                 }
             } catch (error) {
                 console.error("Error fetching player data:", error);
                 document.getElementById('status').textContent = "Error fetching data. See console for details.";
+                document.getElementById('status').className = "error";
             }
         }
 
