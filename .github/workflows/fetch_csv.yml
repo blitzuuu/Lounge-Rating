@@ -76,6 +76,11 @@ jobs:
               save_to_json(players, OUTPUT_JSON_FILE)
           EOF
 
+      - name: Configure Git
+        run: |
+          git config --local user.name "GitHub Action"
+          git config --local user.email "actions@github.com"
+
       - name: Push changes to a new branch
         run: |
           git checkout -b update-player-data
