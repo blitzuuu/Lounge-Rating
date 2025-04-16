@@ -47,39 +47,28 @@
                 return;
             }
 
-            const ladderId = 15; // Fixed ladder ID
-            const proxyUrl = "https://thingproxy.freeboard.io/fetch/";
+            // Use AllOrigins proxy
+            const proxyUrl = "https://api.allorigins.win/get?url=";
             const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
-            const url = proxyUrl + targetUrl;
-            
-            console.log("Constructed URL:", url); // Log the constructed URL for debugging
+            const url = proxyUrl + encodeURIComponent(targetUrl);
+
+            console.log("Constructed URL:", url);
 
             try {
-                const response = await fetch(url, {
-                    headers: {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-                    }
-                });
+                const response = await fetch(url);
+                const data = await response.json();
+                const htmlText = data.contents; // Extract the HTML response
 
-                if (response.ok) {
-                    const htmlText = await response.text();
-
-                    // Check if the response contains the "This player does not exist" error
-                    if (htmlText.includes("This player does not exist")) {
-                        document.getElementById('status').textContent = "Error: This player does not exist.";
-                        document.getElementById('status').className = "error";
-                        console.error("Server response indicates the player ID does not exist.");
-                    } else {
-                        document.getElementById('status').textContent = "Data fetched successfully!";
-                        document.getElementById('status').className = "success";
-
-                        // Display the raw HTML response for debugging purposes
-                        document.getElementById('results').textContent = htmlText;
-                    }
-                } else {
-                    document.getElementById('status').textContent = "Failed to fetch data. Status: " + response.status;
+                // Check if the response contains the "This player does not exist" error
+                if (htmlText.includes("This player does not exist")) {
+                    document.getElementById('status').textContent = "Error: This player does not exist.";
                     document.getElementById('status').className = "error";
-                    console.error("Failed to fetch data. HTTP Status:", response.status, response.statusText);
+                } else {
+                    document.getElementById('status').textContent = "Data fetched successfully!";
+                    document.getElementById('status').className = "success";
+
+                    // Display the raw HTML response for debugging purposes
+                    document.getElementById('results').textContent = htmlText;
                 }
             } catch (error) {
                 console.error("Error fetching player data:", error);
