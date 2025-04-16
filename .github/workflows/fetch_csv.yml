@@ -1,56 +1,34 @@
-name: Fetch CSV and Generate JSON
-
-on:
-  schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  fetch-csv:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: pip install requests
-
       - name: Run script to fetch CSV and generate JSON
         run: |
           python3 <<EOF
           import requests
-          import base64
+          from bs4 import BeautifulSoup
           import csv
           import json
           import os
 
-          PROXY_URL = "https://api.allorigins.win/get?url="
-          CSV_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv"
+          CSV_PAGE_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv"
           OUTPUT_JSON_FILE = "player_data.json"
 
           def fetch_and_process_csv():
               try:
-                  full_url = PROXY_URL + CSV_URL
-                  response = requests.get(full_url)
-                  if not response.ok:
-                      raise Exception("Failed to fetch the CSV file.")
-                  data = response.json()
-                  base64_content = data['contents'].split(',')[1]
-                  csv_text = base64.b64decode(base64_content).decode('utf-8')
+                  # Fetch the HTML page containing the CSV file
+                  response = requests.get(CSV_PAGE_URL)
+                  response.raise_for_status()  # Raise an exception if the request fails
 
+                  # Parse the HTML content using Beautiful Soup
+                  soup = BeautifulSoup(response.text, 'html.parser')
+
+                  # Extract the CSV content (assumes the CSV is directly in the response text)
+                  csv_text = soup.get_text()
+
+                  # Parse the CSV content
                   reader = csv.reader(csv_text.splitlines())
                   headers = next(reader)
                   player_name_index = headers.index("player_name")
                   player_id_index = headers.index("player_id")
 
+                  # Convert the CSV rows into a JSON structure
                   players = []
                   for row in reader:
                       if len(row) > max(player_name_index, player_id_index):
@@ -59,8 +37,11 @@ jobs:
                           players.append({"name": player_name, "id": player_id})
 
                   return players
+              except requests.RequestException as e:
+                  print(f"Error fetching the CSV page: {e}")
+                  return None
               except Exception as e:
-                  print(f"Error: {e}")
+                  print(f"Error processing the CSV content: {e}")
                   return None
 
           def save_to_json(data, file_path):
@@ -77,21 +58,3 @@ jobs:
           else:
               print("No players data fetched.")
           EOF
-
-      - name: Debug: Inspect player_data.json
-        run: cat player_data.json || echo "player_data.json not found"
-
-      - name: Configure Git
-        run: |
-          git config --local user.name "GitHub Action"
-          git config --local user.email "actions@github.com"
-
-      - name: Commit and push changes
-        run: |
-          git checkout -b update-player-data || git checkout update-player-data
-          git add player_data.json
-          git status
-          git commit -m "Update player_data.json with latest player information" || echo "No changes to commit"
-          git push origin update-player-data
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
