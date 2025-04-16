@@ -2,7 +2,7 @@ name: Fetch CSV and Generate JSON
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *' # Run daily at midnight UTC
   workflow_dispatch:
 
 permissions:
@@ -12,17 +12,21 @@ jobs:
   fetch-csv:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: pip install requests
 
+      # Step 4: Run the Python script to fetch CSV and generate JSON
       - name: Run script to fetch CSV and generate JSON
         run: |
           python3 <<EOF
@@ -34,7 +38,7 @@ jobs:
 
           PROXY_URL = "https://api.allorigins.win/get?url="
           CSV_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv"
-          OUTPUT_JSON_FILE = "./player_data.json"
+          OUTPUT_JSON_FILE = "player_data.json"
 
           def fetch_and_process_csv():
               try:
@@ -65,37 +69,36 @@ jobs:
 
           def save_to_json(data, file_path):
               try:
-                  print(f"Saving JSON file to: {os.path.abspath(file_path)}")
                   with open(file_path, "w") as json_file:
                       json.dump(data, json_file, indent=4)
-                  print("Generated JSON content:", json.dumps(data, indent=4))
+                  print(f"Data successfully saved to {file_path}")
               except Exception as e:
                   print(f"Error saving data to JSON: {e}")
 
           players = fetch_and_process_csv()
-          if players is not None:
+          if players:
               save_to_json(players, OUTPUT_JSON_FILE)
+          else:
+              print("No players data fetched.")
           EOF
 
+      # Step 5: Debugging - List the repository contents
       - name: Debug: List repository contents
         run: |
           ls -la
-          if [ -f player_data.json ]; then
-            echo "player_data.json exists:"
-            cat player_data.json
-          else
-            echo "player_data.json does not exist"
-          fi
+          cat player_data.json || echo "player_data.json does not exist"
 
+      # Step 6: Configure Git
       - name: Configure Git
         run: |
           git config --local user.name "GitHub Action"
           git config --local user.email "actions@github.com"
 
+      # Step 7: Commit and push changes
       - name: Commit and push changes
         run: |
-          git checkout -b update-player-data
-          git add --force player_data.json
+          git checkout -b update-player-data || git checkout update-player-data
+          git add player_data.json
           git commit -m "Update player_data.json with latest player information" || echo "No changes to commit"
           git push origin update-player-data
         env:
