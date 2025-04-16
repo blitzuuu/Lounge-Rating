@@ -48,10 +48,10 @@
             }
 
             const ladderId = 15; // Fixed ladder ID
-            const proxyUrl = "https://corsproxy.io/?"; // CORS proxy URL
-            const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=${ladderId}&player_id=${playerId}`;
-            const url = proxyUrl + encodeURIComponent(targetUrl);
-
+            const proxyUrl = "https://thingproxy.freeboard.io/fetch/";
+            const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
+            const url = proxyUrl + targetUrl;
+            
             console.log("Constructed URL:", url); // Log the constructed URL for debugging
 
             try {
