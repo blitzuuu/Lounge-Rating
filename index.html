@@ -35,10 +35,10 @@
 <body>
     <h1>Lounge Rating</h1>
     <p id="status">Fetching data...</p>
-    <div id="results"></div>
+    <div id="player-data"></div>
 
     <script>
-        async function fetchPlayerData() {
+        async function fetchAndParsePlayerData() {
             const params = new URLSearchParams(window.location.search);
             const playerId = params.get('player_id');
 
@@ -47,37 +47,39 @@
                 return;
             }
 
-            // Use AllOrigins proxy
-            const proxyUrl = "https://api.allorigins.win/get?url=";
+            const proxyUrl = "https://api.allorigins.win/get?url="; // CORS proxy
             const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
             const url = proxyUrl + encodeURIComponent(targetUrl);
-
-            console.log("Constructed URL:", url);
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
                 const htmlText = data.contents; // Extract the HTML response
 
-                // Check if the response contains the "This player does not exist" error
-                if (htmlText.includes("This player does not exist")) {
-                    document.getElementById('status').textContent = "Error: This player does not exist.";
-                    document.getElementById('status').className = "error";
-                } else {
+                // Parse the HTML response
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, "text/html");
+
+                // Example: Extract player stats from a specific table
+                const playerTable = doc.querySelector("table.profiletable");
+                if (playerTable) {
                     document.getElementById('status').textContent = "Data fetched successfully!";
                     document.getElementById('status').className = "success";
 
-                    // Display the raw HTML response for debugging purposes
-                    document.getElementById('results').textContent = htmlText;
+                    // Display the table
+                    document.getElementById('player-data').innerHTML = playerTable.outerHTML;
+                } else {
+                    document.getElementById('status').textContent = "Error: Could not find player data.";
+                    document.getElementById('status').className = "error";
                 }
             } catch (error) {
-                console.error("Error fetching player data:", error);
+                console.error("Error fetching or parsing player data:", error);
                 document.getElementById('status').textContent = "Error fetching data. See console for details.";
                 document.getElementById('status').className = "error";
             }
         }
 
-        window.onload = fetchPlayerData;
+        window.onload = fetchAndParsePlayerData;
     </script>
 </body>
 </html>
