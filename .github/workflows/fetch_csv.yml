@@ -78,16 +78,6 @@ jobs:
               print("No players data fetched.")
           EOF
 
-      - name: Debug: List repository contents
-        run: |
-          ls -la
-          if [ -f player_data.json ]; then
-            echo "player_data.json exists:"
-            cat player_data.json
-          else
-            echo "player_data.json does not exist"
-          fi
-
       - name: Configure Git
         run: |
           git config --local user.name "GitHub Action"
