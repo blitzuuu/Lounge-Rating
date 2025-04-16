@@ -12,21 +12,17 @@ jobs:
   fetch-csv:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: pip install requests
 
-      # Step 4: Run the Python script to fetch CSV and generate JSON
       - name: Run script to fetch CSV and generate JSON
         run: |
           python3 <<EOF
@@ -82,19 +78,21 @@ jobs:
               print("No players data fetched.")
           EOF
 
-      # Step 5: Debugging - List the repository contents
       - name: Debug: List repository contents
         run: |
           ls -la
-          cat player_data.json || echo "player_data.json does not exist"
+          if [ -f player_data.json ]; then
+            echo "player_data.json exists:"
+            cat player_data.json
+          else
+            echo "player_data.json does not exist"
+          fi
 
-      # Step 6: Configure Git
       - name: Configure Git
         run: |
           git config --local user.name "GitHub Action"
           git config --local user.email "actions@github.com"
 
-      # Step 7: Commit and push changes
       - name: Commit and push changes
         run: |
           git checkout -b update-player-data || git checkout update-player-data
