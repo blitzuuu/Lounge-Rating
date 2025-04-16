@@ -28,16 +28,56 @@
 
     <script>
         async function fetchAndUpdatePlayerStats() {
-            // Get the 'player_id' from the URL query string
+            // Get parameters from the URL
             const params = new URLSearchParams(window.location.search);
-            const playerId = params.get('player_id');
+            let playerId = params.get('player_id');
+            const playerName = params.get('name');
 
-            // If no player_id is provided, display an error
+            // If no player_id but name is provided, fetch the player_id from the CSV
+            if (!playerId && playerName) {
+                try {
+                    const proxyUrl = "https://api.allorigins.win/get?url=";
+                    const csvUrl = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv";
+                    const fullUrl = proxyUrl + encodeURIComponent(csvUrl);
+
+                    const response = await fetch(fullUrl);
+                    if (!response.ok) throw new Error("Failed to fetch CSV file.");
+                    const data = await response.json();
+
+                    // Decode the Base64 CSV content
+                    const base64Content = data.contents.split(',')[1];
+                    const csvText = atob(base64Content);
+
+                    // Parse the CSV file
+                    const rows = csvText.split('\n').map(row => row.split(','));
+                    const headers = rows[0];
+                    const playerIndex = headers.findIndex(h => h.replace(/"/g, '').toLowerCase() === "player_name");
+                    const idIndex = headers.findIndex(h => h.replace(/"/g, '').toLowerCase() === "player_id");
+
+                    if (playerIndex === -1 || idIndex === -1) {
+                        throw new Error("CSV headers missing 'player_name' or 'player_id'.");
+                    }
+
+                    const matchingRow = rows.find(row => row[playerIndex]?.replace(/"/g, '').toLowerCase() === playerName.toLowerCase());
+                    if (matchingRow) {
+                        playerId = matchingRow[idIndex];
+                    } else {
+                        throw new Error(`Player "${playerName}" not found.`);
+                    }
+                } catch (error) {
+                    console.error("Error fetching or parsing CSV:", error);
+                    document.getElementById('player-stats').innerHTML = "Error fetching player information.";
+                    return;
+                }
+            }
+
+            // If no player_id is available after all, display an error
             if (!playerId) {
-                document.getElementById('player-stats').innerHTML = "Error: No player_id provided.";
+                document.getElementById('player-stats').innerHTML = "Error: No player_id or valid name provided.";
                 return;
             }
 
+            // Fetch player data using player_id
             const proxyUrl = "https://api.allorigins.win/get?url="; // CORS proxy
             const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
             const url = proxyUrl + encodeURIComponent(targetUrl);
@@ -52,7 +92,7 @@
                 const doc = parser.parseFromString(htmlText, "text/html");
 
                 // Target the first row of the table
-                const firstRow = doc.querySelector(".profiletable tr.thick"); // First row with class 'thick'
+                const firstRow = doc.querySelector(".profiletable tr.thick");
 
                 if (firstRow) {
                     const cells = firstRow.querySelectorAll("td");
