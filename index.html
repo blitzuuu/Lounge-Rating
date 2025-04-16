@@ -30,10 +30,10 @@
         async function fetchAndUpdatePlayerStats() {
             // Get parameters from the URL
             const params = new URLSearchParams(window.location.search);
-            let playerId = params.get('id'); // Changed from 'player_id' to 'id'
+            let playerId = params.get('player_id');
             const playerName = params.get('name');
 
-            // If no id but name is provided, fetch the player_id from the CSV
+            // If no player_id but name is provided, fetch the player_id from the CSV
             if (!playerId && playerName) {
                 try {
                     const proxyUrl = "https://api.allorigins.win/get?url=";
@@ -41,7 +41,7 @@
                     const fullUrl = proxyUrl + encodeURIComponent(csvUrl);
 
                     const response = await fetch(fullUrl);
-                    if (!response.ok) throw new Error("Failed to fetch CSV file.");
+                    if (!response.ok) throw new Error("Failed to fetch CSV.");
                     const data = await response.json();
 
                     // Decode the Base64 CSV content
@@ -58,7 +58,10 @@
                         throw new Error("CSV headers missing 'player_name' or 'player_id'.");
                     }
 
-                    const matchingRow = rows.find(row => row[playerIndex]?.replace(/"/g, '').toLowerCase() === playerName.toLowerCase());
+                    const matchingRow = rows.find(row => 
+                        row[playerIndex]?.replace(/"/g, '').toLowerCase() === playerName.toLowerCase()
+                    );
+
                     if (matchingRow) {
                         playerId = matchingRow[idIndex];
                     } else {
@@ -73,7 +76,7 @@
 
             // If no player_id is available after all, display an error
             if (!playerId) {
-                document.getElementById('player-stats').innerHTML = "Error: No id or valid name provided.";
+                document.getElementById('player-stats').innerHTML = "Error: No player_id or valid name provided.";
                 return;
             }
 
