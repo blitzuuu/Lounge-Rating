@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LR and MMR Display</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: transparent;
+            color: white;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 30px;
+            position: relative;
+            text-align: left;
+        }
+        .container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+        sup {
+            font-size: 0.8em;
+            vertical-align: super;
+        }
+        .gain {
+            color: mediumseagreen;
+        }
+        .loss {
+            color: tomato;
+        }
+        .neutral {
+            color: orange;
+        }
+        .changes {
+            margin-top: 20px;
+        }
+        .header span {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <p id="lr"></p>
+            <span> </span>
+            <p id="mmr"></p>
+        </div>
+        <div class="changes">
+            <p id="lrChange"></p>
+        </div>
+        <div class="changes">
+            <p id="mmrChange"></p>
+        </div>
+    </div>
+    <script>
+        async function fetchStats(playerId) {
+            const ladderId = 15; // Fixed ladder ID
+            const url = `https://mkwlounge.gg/ladder/player.php?ladder_id=${ladderId}&player_id=${playerId}`;
+
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+                    }
+                });
+
+                if (response.ok) {
+                    const htmlText = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlText, "text/html");
+
+                    const tables = doc.querySelectorAll("table.profiletable");
+                    if (tables.length > 0) {
+                        const firstTable = tables[0];
+                        const rows = firstTable.querySelectorAll("tr");
+                        let lr = "N/A";
+                        let mmr = "N/A";
+
+                        if (rows.length > 1) {
+                            const dataCells = rows[1].querySelectorAll("td");
+                            if (dataCells.length > 6) {
+                                lr = dataCells[5].textContent.trim();
+                                mmr = dataCells[6].textContent.trim();
+                            }
+                        }
+
+                        const eventTable = tables[2];
+                        const recentEvent = eventTable.querySelectorAll("tr")[1];
+                        const eventCells = recentEvent.querySelectorAll("td");
+
+                        let lrChange = "N/A";
+                        let mmrChange = "N/A";
+
+                        if (eventCells.length > 8) {
+                            lrChange = eventCells[8].textContent.trim();
+                            mmrChange = eventCells[10].textContent.trim();
+                        }
+
+                        function getChangeClass(change) {
+                            if (change.startsWith('+') && change !== '+0') {
+                                return 'gain';
+                            } else if (change.startsWith('-')) {
+                                return 'loss';
+                            } else {
+                                return 'neutral';
+                            }
+                        }
+
+                        document.getElementById('lr').innerHTML = `LR: ${lr}<sup class="${getChangeClass(lrChange)}">${lrChange}</sup>`;
+                        document.getElementById('mmr').innerHTML = `MMR: ${mmr}<sup class="${getChangeClass(mmrChange)}">${mmrChange}</sup>`;
+                        document.getElementById('lrChange').innerHTML = `Latest LR Change: <span class="${getChangeClass(lrChange)}">${lrChange}</span>`;
+                        document.getElementById('mmrChange').innerHTML = `Latest MMR Change: <span class="${getChangeClass(mmrChange)}">${mmrChange}</span>`;
+                    } else {
+                        document.getElementById('lr').innerHTML = "No data available for this player.";
+                        document.getElementById('mmr').innerHTML = "";
+                    }
+                } else {
+                    document.getElementById('lr').innerHTML = "Failed to fetch data.";
+                    document.getElementById('mmr').innerHTML = "";
+                }
+            } catch (error) {
+                console.error('Error fetching player stats:', error);
+                document.getElementById('lr').innerHTML = "Error fetching data.";
+                document.getElementById('mmr').innerHTML = "";
+            }
+        }
+
+        function startFetchingStats() {
+            const params = new URLSearchParams(window.location.search);
+            const playerId = params.get('player_id');
+
+            if (!playerId) {
+                document.getElementById('lr').innerHTML = "Please specify a player_id in the URL, e.g., ?player_id=5402";
+                return;
+            }
+
+            // Fetch stats initially
+            fetchStats(playerId);
+
+            // Fetch stats every 60 seconds
+            setInterval(() => fetchStats(playerId), 60 * 1000);
+        }
+
+        window.onload = startFetchingStats;
+    </script>
+</body>
+</html>
