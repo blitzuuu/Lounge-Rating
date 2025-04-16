@@ -30,10 +30,10 @@
         async function fetchAndUpdatePlayerStats() {
             // Get parameters from the URL
             const params = new URLSearchParams(window.location.search);
-            let playerId = params.get('player_id');
+            let playerId = params.get('id'); // Changed from 'player_id' to 'id'
             const playerName = params.get('name');
 
-            // If no player_id but name is provided, fetch the player_id from the CSV
+            // If no id but name is provided, fetch the player_id from the CSV
             if (!playerId && playerName) {
                 try {
                     const proxyUrl = "https://api.allorigins.win/get?url=";
@@ -73,7 +73,7 @@
 
             // If no player_id is available after all, display an error
             if (!playerId) {
-                document.getElementById('player-stats').innerHTML = "Error: No player_id or valid name provided.";
+                document.getElementById('player-stats').innerHTML = "Error: No id or valid name provided.";
                 return;
             }
 
