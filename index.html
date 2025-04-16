@@ -25,20 +25,22 @@
         .success {
             color: lightgreen;
         }
-        #results {
+        #player-stats {
             margin-top: 20px;
-            white-space: pre-wrap;
-            text-align: left;
+            font-size: 24px;
+        }
+        sup {
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
     <h1>Lounge Rating</h1>
     <p id="status">Fetching data...</p>
-    <div id="player-data"></div>
+    <div id="player-stats"></div>
 
     <script>
-        async function fetchAndParsePlayerData() {
+        async function fetchAndDisplayPlayerStats() {
             const params = new URLSearchParams(window.location.search);
             const playerId = params.get('player_id');
 
@@ -60,16 +62,29 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlText, "text/html");
 
-                // Example: Extract player stats from a specific table
-                const playerTable = doc.querySelector("table.profiletable");
-                if (playerTable) {
+                // Extract LR
+                const lrElement = doc.querySelector(".profiletable tr:nth-child(2) td:nth-child(2)"); // Update selector based on actual structure
+                const lrChangeElement = doc.querySelector(".profiletable tr:nth-child(2) td:nth-child(3)"); // Update selector based on actual structure
+
+                // Extract MMR
+                const mmrElement = doc.querySelector(".profiletable tr:nth-child(3) td:nth-child(2)"); // Update selector based on actual structure
+                const mmrChangeElement = doc.querySelector(".profiletable tr:nth-child(3) td:nth-child(3)"); // Update selector based on actual structure
+
+                if (lrElement && mmrElement) {
+                    const lr = lrElement.textContent.trim();
+                    const lrChange = lrChangeElement ? lrChangeElement.textContent.trim() : "0";
+
+                    const mmr = mmrElement.textContent.trim();
+                    const mmrChange = mmrChangeElement ? mmrChangeElement.textContent.trim() : "0";
+
+                    // Format and display the data
                     document.getElementById('status').textContent = "Data fetched successfully!";
                     document.getElementById('status').className = "success";
 
-                    // Display the table
-                    document.getElementById('player-data').innerHTML = playerTable.outerHTML;
+                    const formattedStats = `LR: ${lr}<sup>${lrChange}</sup>   MMR: ${mmr}<sup>${mmrChange}</sup>`;
+                    document.getElementById('player-stats').innerHTML = formattedStats;
                 } else {
-                    document.getElementById('status').textContent = "Error: Could not find player data.";
+                    document.getElementById('status').textContent = "Error: Could not find player stats.";
                     document.getElementById('status').className = "error";
                 }
             } catch (error) {
@@ -79,7 +94,7 @@
             }
         }
 
-        window.onload = fetchAndParsePlayerData;
+        window.onload = fetchAndDisplayPlayerStats;
     </script>
 </body>
 </html>
