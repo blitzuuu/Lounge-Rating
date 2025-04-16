@@ -9,15 +9,15 @@
             font-family: Arial, sans-serif;
             background-color: #121212;
             color: white;
-            text-align: center;
             margin: 0;
             padding: 0;
         }
-        h1 {
-            margin: 20px 0;
-        }
-        p {
+        .header {
+            position: absolute;
+            top: 10px;
+            left: 10px;
             font-size: 18px;
+            font-weight: bold;
         }
         .error {
             color: red;
@@ -25,53 +25,41 @@
         .success {
             color: lightgreen;
         }
-        #results {
-            margin-top: 20px;
-            white-space: pre-wrap;
-            text-align: left;
-        }
     </style>
 </head>
 <body>
-    <h1>Lounge Rating</h1>
-    <p id="status">Fetching data...</p>
-    <div id="player-data"></div>
+    <div class="header" id="header">Loading...</div>
 
     <script>
-        async function fetchAndParsePlayerData() {
+        async function fetchAndDisplayData() {
             const params = new URLSearchParams(window.location.search);
             let playerId = params.get('id');
             const playerName = params.get('name');
 
-            // Check if both name and id are missing
             if (!playerId && !playerName) {
-                document.getElementById('status').textContent = "Please specify 'id' or 'name' in the URL, e.g., ?id=5402 or ?name=SamplePlayer";
+                document.getElementById('header').textContent = "Error: Please provide 'id' or 'name' in the URL.";
+                document.getElementById('header').className = "error";
                 return;
             }
 
             try {
-                // If name is provided, fetch the CSV to find the corresponding id
-                if (playerName && !playerId) {
+                // Fetch player_id if name is provided
+                if (!playerId && playerName) {
                     const proxyUrl = "https://api.allorigins.win/get?url=";
                     const csvUrl = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv";
                     const fullUrl = proxyUrl + encodeURIComponent(csvUrl);
 
-                    console.log("Fetching CSV from:", fullUrl); // Debugging log
                     const response = await fetch(fullUrl);
-                    if (!response.ok) throw new Error("Failed to fetch CSV file.");
+                    if (!response.ok) throw new Error("Failed to fetch CSV.");
                     const data = await response.json();
+                    const base64Content = data.contents.split(',')[1];
+                    const csvText = atob(base64Content);
 
-                    // Decode the Base64 CSV content
-                    const base64Content = data.contents.split(',')[1]; // Extract the Base64 part
-                    const csvText = atob(base64Content); // Decode Base64 into plain text
-
-                    console.log("Decoded CSV content:", csvText); // Debugging log
-
-                    // Parse the CSV file
+                    // Parse CSV
                     const rows = csvText.split('\n').map(row => row.split(','));
-                    const headers = rows[0]; // First row contains headers
-                    const playerIndex = headers.findIndex(header => header.replace(/"/g, '').toLowerCase() === "player_name");
-                    const idIndex = headers.findIndex(header => header.replace(/"/g, '').toLowerCase() === "player_id");
+                    const headers = rows[0];
+                    const playerIndex = headers.findIndex(h => h.replace(/"/g, '').toLowerCase() === "player_name");
+                    const idIndex = headers.findIndex(h => h.replace(/"/g, '').toLowerCase() === "player_id");
 
                     if (playerIndex === -1 || idIndex === -1) {
                         throw new Error("CSV headers missing 'player_name' or 'player_id'.");
@@ -80,49 +68,43 @@
                     const matchingRow = rows.find(row => row[playerIndex]?.replace(/"/g, '').toLowerCase() === playerName.toLowerCase());
                     if (matchingRow) {
                         playerId = matchingRow[idIndex];
-                        console.log(`Found id for "${playerName}": ${playerId}`); // Debugging log
-                        document.getElementById('status').textContent = `Found id for "${playerName}": ${playerId}`;
-                        document.getElementById('status').className = "success";
                     } else {
-                        throw new Error(`Player "${playerName}" not found in the CSV.`);
+                        throw new Error(`Player "${playerName}" not found.`);
                     }
                 }
 
-                // Fetch player data using the id
+                // Fetch player data using id
                 if (playerId) {
-                    const proxyUrl = "https://api.allorigins.win/get?url="; // CORS proxy
-                    const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
-                    const url = proxyUrl + encodeURIComponent(targetUrl);
+                    const proxyUrl = "https://api.allorigins.win/get?url=";
+                    const playerUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
+                    const fullUrl = proxyUrl + encodeURIComponent(playerUrl);
 
-                    console.log("Fetching player data from:", url); // Debugging log
-                    const response = await fetch(url);
+                    const response = await fetch(fullUrl);
                     const data = await response.json();
-                    const htmlText = data.contents; // Extract the HTML response
+                    const htmlText = data.contents;
 
-                    // Parse the HTML response
+                    // Parse HTML
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(htmlText, "text/html");
 
-                    // Example: Extract player stats from a specific table
-                    const playerTable = doc.querySelector("table.profiletable");
-                    if (playerTable) {
-                        document.getElementById('status').textContent = "Data fetched successfully!";
-                        document.getElementById('status').className = "success";
+                    // Extract Lounge Rating (LR) and MMR Gain/Loss
+                    const lrElement = doc.querySelector("td.rating");
+                    const mmrElement = doc.querySelector("td.mmr-change");
 
-                        // Display the table
-                        document.getElementById('player-data').innerHTML = playerTable.outerHTML;
-                    } else {
-                        throw new Error("Could not find player data on the site.");
-                    }
+                    const loungeRating = lrElement ? lrElement.textContent.trim() : "N/A";
+                    const mmrChange = mmrElement ? mmrElement.textContent.trim() : "N/A";
+
+                    document.getElementById('header').textContent = `LR: ${loungeRating} | MMR: ${mmrChange}`;
+                    document.getElementById('header').className = "success";
                 }
             } catch (error) {
-                console.error("Error:", error); // Log the error
-                document.getElementById('status').textContent = error.message;
-                document.getElementById('status').className = "error";
+                console.error(error);
+                document.getElementById('header').textContent = error.message;
+                document.getElementById('header').className = "error";
             }
         }
 
-        window.onload = fetchAndParsePlayerData;
+        window.onload = fetchAndDisplayData;
     </script>
 </body>
 </html>
