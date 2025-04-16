@@ -6,49 +6,32 @@
     <title>Lounge Rating</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-            text-align: center;
             margin: 0;
             padding: 0;
-        }
-        h1 {
-            margin: 20px 0;
-        }
-        p {
-            font-size: 18px;
-        }
-        .error {
-            color: red;
-        }
-        .success {
-            color: lightgreen;
+            background-color: transparent; /* Transparent background */
+            font-family: Arial, sans-serif;
         }
         #player-stats {
-            margin-top: 20px;
-            font-size: 24px;
+            position: absolute;
+            top: 10px; /* Position at the top-left corner */
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 18px;
         }
         sup {
-            font-size: 16px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <h1>Lounge Rating</h1>
-    <p id="status">Fetching data...</p>
-    <div id="player-stats"></div>
+    <div id="player-stats"></div> <!-- Only LR and MMR will be displayed here -->
 
     <script>
-        async function fetchAndDisplayPlayerStats() {
-            const params = new URLSearchParams(window.location.search);
-            const playerId = params.get('player_id');
-
-            if (!playerId) {
-                document.getElementById('status').textContent = "Please specify a player_id in the URL, e.g., ?player_id=5402";
-                return;
-            }
-
+        async function fetchAndUpdatePlayerStats() {
+            const playerId = 5402; // Replace with the desired player_id
             const proxyUrl = "https://api.allorigins.win/get?url="; // CORS proxy
             const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
             const url = proxyUrl + encodeURIComponent(targetUrl);
@@ -56,7 +39,7 @@
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                const htmlText = data.contents; // Extract the HTML response
+                const htmlText = data.contents;
 
                 // Parse the HTML response
                 const parser = new DOMParser();
@@ -66,37 +49,33 @@
                 const firstRow = doc.querySelector(".profiletable tr.thick"); // First row with class 'thick'
 
                 if (firstRow) {
-                    const cells = firstRow.querySelectorAll("td"); // Get all <td> cells in the row
+                    const cells = firstRow.querySelectorAll("td");
 
                     // Extract data based on column positions
-                    const mmrChange = cells[8]?.textContent.trim(); // Column 9 (index 8)
-                    const mmr = cells[9]?.textContent.trim();       // Column 10 (index 9)
-                    const lrChange = cells[10]?.textContent.trim(); // Column 11 (index 10)
-                    const lr = cells[11]?.textContent.trim();       // Column 12 (index 11)
+                    const mmrChange = cells[8]?.textContent.trim();
+                    const mmr = cells[9]?.textContent.trim();
+                    const lrChange = cells[10]?.textContent.trim();
+                    const lr = cells[11]?.textContent.trim();
 
                     if (mmr && lr && mmrChange && lrChange) {
-                        // Format and display the data
-                        document.getElementById('status').textContent = "Data fetched successfully!";
-                        document.getElementById('status').className = "success";
-
+                        // Format the data
                         const formattedStats = `LR: ${lr}<sup>${lrChange}</sup>   MMR: ${mmr}<sup>${mmrChange}</sup>`;
                         document.getElementById('player-stats').innerHTML = formattedStats;
                     } else {
-                        document.getElementById('status').textContent = "Error: Could not find player stats.";
-                        document.getElementById('status').className = "error";
+                        document.getElementById('player-stats').innerHTML = "Error: Could not find player stats.";
                     }
                 } else {
-                    document.getElementById('status').textContent = "Error: Could not find the profile table row.";
-                    document.getElementById('status').className = "error";
+                    document.getElementById('player-stats').innerHTML = "Error: Could not find the profile table row.";
                 }
             } catch (error) {
                 console.error("Error fetching or parsing player data:", error);
-                document.getElementById('status').textContent = "Error fetching data. See console for details.";
-                document.getElementById('status').className = "error";
+                document.getElementById('player-stats').innerHTML = "Error fetching data.";
             }
         }
 
-        window.onload = fetchAndDisplayPlayerStats;
+        // Fetch data and update periodically (every 30 seconds)
+        fetchAndUpdatePlayerStats(); // Initial fetch
+        setInterval(fetchAndUpdatePlayerStats, 30000); // Update every 30 seconds
     </script>
 </body>
 </html>
