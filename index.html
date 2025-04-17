@@ -39,6 +39,10 @@
             const params = new URLSearchParams(window.location.search);
             let playerId = params.get('id');
             const playerName = params.get('name');
+            const isCT = params.has('ct'); // Check if 'ct' is present in the URL
+
+            // Set ladder_id based on whether 'ct' is in the URL
+            const ladderId = isCT ? 16 : 15;
 
             // If no id but name is provided, fetch the player_id from player_data.json
             if (!playerId && playerName) {
@@ -67,9 +71,9 @@
                 return;
             }
 
-            // Fetch player data using player_id
+            // Fetch player data using player_id and ladder_id
             const proxyUrl = "https://api.allorigins.win/get?url=";
-            const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
+            const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=${ladderId}&player_id=${playerId}`;
             const url = proxyUrl + encodeURIComponent(targetUrl);
 
             try {
