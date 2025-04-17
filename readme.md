@@ -1,7 +1,7 @@
 ## A Dynamic LR and MMR Display for OBS
-To use this display, insert your lounge name at the end of this url: https://blitzuuu.github.io/Lounge-Rating/?name=<YOUR_LOUNGE_NAME_HERE>
+To use this display, insert your lounge name at the end of this url, replace the "YOUR_LOUNGE_NAME" text: https://blitzuuu.github.io/Lounge-Rating/?name=YOUR_LOUNGE_NAME
 
-You can also use your player ID at the end of this url to avoid issues when changing your name: https://blitzuuu.github.io/Lounge-Rating/?id=<YOUR_PLAYER_ID_HERE>
+You can also use your player ID at the end of this url to avoid issues when changing your name, replace the "YOUR_PLAYER_ID" here text: https://blitzuuu.github.io/Lounge-Rating/?id=YOUR_PLAYER_ID
 
 Add either of these links as a *Browser Source* in OBS or whichever streaming/recording software you use. I personally set the width to 650 and height to 75, but this will depend on your text styling.
 
