@@ -5,6 +5,8 @@ You can also use your player ID at the end of this url to avoid issues when chan
 
 Add either of these links as a *Browser Source* in OBS or whichever streaming/recording software you use. I personally set the width to 650 and height to 75, but this will depend on your text styling.
 
+If you want the overlay to display custom track stats instead add "&ct" to the end of the url.
+
 The name database is updated every 24 hours at midnight UTC, so if you have changed you name within the past 24 hours it may still only work with your old name until the database is updated.
 
 If you would like to change the text style you can do so in the *Custom CSS* section in OBS, for example I style mine like this: 
