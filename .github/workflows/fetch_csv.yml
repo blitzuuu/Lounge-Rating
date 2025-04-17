@@ -79,7 +79,7 @@ jobs:
           fi
 
       - name: Upload JSON file as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@8c0e0cce15ccfb2cdecbf2a5a1a3c996d90a2d3f
         with:
           name: player-data
           path: player_data.json
