@@ -2,29 +2,25 @@ name: Fetch CSV and Generate JSON
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"  # Runs every day at midnight UTC
 
 jobs:
   fetch-csv:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          persist-credentials: true  # Required to push changes
 
-      # Step 2: Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      # Step 3: Install Python dependencies
       - name: Install dependencies
         run: pip install beautifulsoup4 requests
 
-      # Step 4: Run the Python script to fetch CSV and generate JSON
       - name: Run script to fetch CSV and generate JSON
         run: |
           python3 <<EOF
@@ -34,26 +30,19 @@ jobs:
           import json
           import os
 
-          # URL of the CSV file
           CSV_PAGE_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv"
           OUTPUT_JSON_FILE = "player_data.json"
 
           def fetch_and_process_csv():
               try:
-                  # Fetch the CSV file
                   response = requests.get(CSV_PAGE_URL)
-                  response.raise_for_status()  # Raise an exception if the request fails
-
-                  # Parse the CSV content
+                  response.raise_for_status()
                   csv_text = response.text
                   reader = csv.reader(csv_text.splitlines())
                   headers = next(reader)
-
-                  # Indexes for required columns
                   player_name_index = headers.index("player_name")
                   player_id_index = headers.index("player_id")
 
-                  # Convert the CSV rows into a JSON structure
                   players = []
                   for row in reader:
                       if len(row) > max(player_name_index, player_id_index):
@@ -74,7 +63,6 @@ jobs:
               except Exception as e:
                   print(f"Error saving JSON: {e}")
 
-          # Main execution
           players = fetch_and_process_csv()
           if players:
               save_to_json(players, OUTPUT_JSON_FILE)
@@ -82,7 +70,6 @@ jobs:
               print("Failed to fetch or process players data.")
           EOF
 
-      # Step 5: Commit the generated JSON file back to the repository
       - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions Bot"
