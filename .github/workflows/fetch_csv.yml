@@ -8,21 +8,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: pip install beautifulsoup4 requests
 
-      # Step 4: Run the Python script
       - name: Run script to fetch CSV and generate JSON
         run: |
           python3 <<EOF
@@ -32,13 +28,11 @@ jobs:
           import json
           import os
 
-          # URL of the CSV file
           CSV_PAGE_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv"
           OUTPUT_JSON_FILE = os.path.join(os.getcwd(), "player_data.json")
 
           def fetch_and_process_csv():
               try:
-                  # Fetch CSV file
                   response = requests.get(CSV_PAGE_URL)
                   response.raise_for_status()
                   soup = BeautifulSoup(response.text, 'html.parser')
@@ -48,7 +42,6 @@ jobs:
                   player_name_index = headers.index("player_name")
                   player_id_index = headers.index("player_id")
 
-                  # Parse CSV into JSON
                   players = []
                   for row in reader:
                       if len(row) > max(player_name_index, player_id_index):
@@ -69,7 +62,6 @@ jobs:
               except Exception as e:
                   print(f"Error saving data: {e}")
 
-          # Main execution
           players = fetch_and_process_csv()
           if players:
               save_to_json(players, OUTPUT_JSON_FILE)
@@ -77,7 +69,6 @@ jobs:
               print("No players data fetched.")
           EOF
 
-      # Step 5: Verify JSON File
       - name: Verify JSON File
         run: |
           if [ -f player_data.json ]; then
@@ -87,9 +78,8 @@ jobs:
             echo "player_data.json does not exist"
           fi
 
-      # Step 6: Upload JSON File as Artifact
       - name: Upload JSON file as artifact
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v3
         with:
           name: player-data
           path: player_data.json
