@@ -69,6 +69,7 @@ jobs:
               except Exception as e:
                   print(f"Error saving data: {e}")
 
+          # Main execution
           players = fetch_and_process_csv()
           if players:
               save_to_json(players, OUTPUT_JSON_FILE)
@@ -88,7 +89,7 @@ jobs:
 
       # Step 6: Upload JSON File as Artifact
       - name: Upload JSON file as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: player-data
           path: player_data.json
