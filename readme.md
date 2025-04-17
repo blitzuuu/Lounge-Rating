@@ -18,4 +18,4 @@ If you would like to change the text style you can do so in the *Custom CSS* sec
 }
 ```
 This is what the output looks like (Note: I also have a semi-transparent black colour source behind my text in OBS to make it more readable):
-![Example Image](Images/Example.jpg)
+![Example Image](images/Example.jpg)
