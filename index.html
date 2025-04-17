@@ -8,29 +8,29 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: transparent; /* Transparent background */
+            background-color: transparent;
             font-family: Arial, sans-serif;
         }
         #player-stats {
             position: absolute;
-            top: 10px; /* Position at the top-left corner */
+            top: 10px;
             left: 10px;
-            color: black; /* Black text */
-            font-size: 18px;
+            color: black;
+            font-size: 30px; /* Base font size */
         }
         sup {
-            font-size: 12px;
+            font-size: 0.6667em; /* 2/3rds of the parent font size */
         }
         .gain {
-            color: mediumseagreen; /* Green for gain */
+            color: mediumseagreen;
         }
         .loss {
-            color: tomato; /* Red for loss */
+            color: tomato;
         }
     </style>
 </head>
 <body>
-    <div id="player-stats">Loading...</div> <!-- Only LR and MMR will be displayed here -->
+    <div id="player-stats">Loading...</div>
 
     <script>
         async function fetchAndUpdatePlayerStats() {
@@ -67,7 +67,7 @@
             }
 
             // Fetch player data using player_id
-            const proxyUrl = "https://api.allorigins.win/get?url="; // CORS proxy
+            const proxyUrl = "https://api.allorigins.win/get?url=";
             const targetUrl = `https://mkwlounge.gg/ladder/player.php?ladder_id=15&player_id=${playerId}`;
             const url = proxyUrl + encodeURIComponent(targetUrl);
 
@@ -97,7 +97,7 @@
                         const mmrChangeColor = parseFloat(mmrChange) >= 0 ? "gain" : "loss";
                         const lrChangeColor = parseFloat(lrChange) >= 0 ? "gain" : "loss";
 
-                        // Format the data with colors
+                        // Format the data with colors and relative font size
                         const formattedStats = `
                             LR: ${lr} <sup class="${lrChangeColor}">${lrChange}</sup>   
                             MMR: ${mmr} <sup class="${mmrChangeColor}">${mmrChange}</sup>
@@ -121,8 +121,8 @@
         function monitorQueryParams() {
             const newSearch = window.location.search;
             if (newSearch !== currentSearch) {
-                currentSearch = newSearch; // Update the current search query
-                fetchAndUpdatePlayerStats(); // Re-fetch and update stats
+                currentSearch = newSearch;
+                fetchAndUpdatePlayerStats();
             }
         }
 
@@ -130,8 +130,8 @@
         setInterval(monitorQueryParams, 1000);
 
         // Fetch data and update periodically (every 30 seconds)
-        fetchAndUpdatePlayerStats(); // Initial fetch
-        setInterval(fetchAndUpdatePlayerStats, 30000); // Update every 30 seconds
+        fetchAndUpdatePlayerStats();
+        setInterval(fetchAndUpdatePlayerStats, 30000);
     </script>
 </body>
 </html>
