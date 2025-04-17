@@ -3,7 +3,7 @@ To use this display, insert your lounge name at the end of this url: https://bli
 
 You can also use your player ID at the end of this url to avoid issues when changing your name: https://blitzuuu.github.io/Lounge-Rating/?id=YOUR_PLAYER_ID
 
-Add these links as a *Browser Source* in OBS or whichever streaming/recording software you use.
+Add either of these links as a *Browser Source* in OBS or whichever streaming/recording software you use. I personally set the width to 650 and height to 75, but this will depend on your text styling.
 
 The name database is updated every 24 hours at midnight UTC, so if you have changed you name within the past 24 hours it may still only work with your old name until the database is updated.
 
