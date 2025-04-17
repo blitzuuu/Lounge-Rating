@@ -21,6 +21,12 @@
         sup {
             font-size: 12px;
         }
+        .gain {
+            color: mediumseagreen; /* Green for gain */
+        }
+        .loss {
+            color: tomato; /* Red for loss */
+        }
     </style>
 </head>
 <body>
@@ -87,8 +93,15 @@
                     const lr = cells[11]?.textContent.trim();
 
                     if (mmr && lr && mmrChange && lrChange) {
-                        // Format the data
-                        const formattedStats = `LR: ${lr}<sup>${lrChange}</sup>   MMR: ${mmr}<sup>${mmrChange}</sup>`;
+                        // Determine colors for gain/loss
+                        const mmrChangeColor = parseFloat(mmrChange) >= 0 ? "gain" : "loss";
+                        const lrChangeColor = parseFloat(lrChange) >= 0 ? "gain" : "loss";
+
+                        // Format the data with colors
+                        const formattedStats = `
+                            LR: ${lr} <sup class="${lrChangeColor}">${lrChange}</sup>   
+                            MMR: ${mmr} <sup class="${mmrChangeColor}">${mmrChange}</sup>
+                        `;
                         document.getElementById('player-stats').innerHTML = formattedStats;
                     } else {
                         document.getElementById('player-stats').innerHTML = "Error: Could not find player stats.";
