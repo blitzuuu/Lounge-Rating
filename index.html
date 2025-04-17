@@ -102,6 +102,20 @@
             }
         }
 
+        // Monitor changes to query parameters and update player stats dynamically
+        let currentSearch = window.location.search;
+
+        function monitorQueryParams() {
+            const newSearch = window.location.search;
+            if (newSearch !== currentSearch) {
+                currentSearch = newSearch; // Update the current search query
+                fetchAndUpdatePlayerStats(); // Re-fetch and update stats
+            }
+        }
+
+        // Call this every second to check for query parameter changes
+        setInterval(monitorQueryParams, 1000);
+
         // Fetch data and update periodically (every 30 seconds)
         fetchAndUpdatePlayerStats(); // Initial fetch
         setInterval(fetchAndUpdatePlayerStats, 30000); // Update every 30 seconds
