@@ -18,11 +18,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Step 3: Install dependencies (Beautiful Soup, requests, etc.)
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: pip install beautifulsoup4 requests
 
-      # Step 4: Run the Python script to fetch CSV and process JSON
+      # Step 4: Run the Python script
       - name: Run script to fetch CSV and generate JSON
         run: |
           python3 <<EOF
@@ -34,31 +34,21 @@ jobs:
 
           # URL of the CSV file
           CSV_PAGE_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv"
-          OUTPUT_JSON_FILE = "player_data.json"
+          OUTPUT_JSON_FILE = os.path.join(os.getcwd(), "player_data.json")
 
           def fetch_and_process_csv():
               try:
-                  # Fetch the HTML page containing the CSV file
+                  # Fetch CSV file
                   response = requests.get(CSV_PAGE_URL)
-                  response.raise_for_status()  # Raise an exception if the request fails
-
-                  # Parse the HTML content using Beautiful Soup
+                  response.raise_for_status()
                   soup = BeautifulSoup(response.text, 'html.parser')
-
-                  # Extract the CSV content (assumes the CSV is directly in the response text)
                   csv_text = soup.get_text()
-                  print(f"Fetched CSV Content (first 500 characters): {csv_text[:500]}")  # Debug: Print first 500 characters
-
-                  # Parse the CSV content
                   reader = csv.reader(csv_text.splitlines())
                   headers = next(reader)
-                  print(f"CSV Headers: {headers}")  # Debug: Print headers
-
-                  # Ensure the required headers exist
                   player_name_index = headers.index("player_name")
                   player_id_index = headers.index("player_id")
 
-                  # Convert the CSV rows into a JSON structure
+                  # Parse CSV into JSON
                   players = []
                   for row in reader:
                       if len(row) > max(player_name_index, player_id_index):
@@ -66,25 +56,19 @@ jobs:
                           player_id = row[player_id_index].strip().replace('"', '')
                           players.append({"name": player_name, "id": player_id})
 
-                  print(f"Parsed Players Data (first 10): {players[:10]}")  # Debug: Print first 10 players
                   return players
-              except requests.RequestException as e:
-                  print(f"Error fetching the CSV page: {e}")
-                  return None
               except Exception as e:
-                  print(f"Error processing the CSV content: {e}")
+                  print(f"Error: {e}")
                   return None
 
           def save_to_json(data, file_path):
               try:
-                  # Save the JSON data to a file
                   with open(file_path, "w") as json_file:
                       json.dump(data, json_file, indent=4)
                   print(f"Data successfully saved to {file_path}")
               except Exception as e:
-                  print(f"Error saving data to JSON: {e}")
+                  print(f"Error saving data: {e}")
 
-          # Main execution
           players = fetch_and_process_csv()
           if players:
               save_to_json(players, OUTPUT_JSON_FILE)
@@ -92,8 +76,8 @@ jobs:
               print("No players data fetched.")
           EOF
 
-      # Step 5: Debug the generated JSON file
-      - name: Debug JSON File
+      # Step 5: Verify JSON File
+      - name: Verify JSON File
         run: |
           if [ -f player_data.json ]; then
             echo "player_data.json exists:"
@@ -101,3 +85,10 @@ jobs:
           else
             echo "player_data.json does not exist"
           fi
+
+      # Step 6: Upload JSON File as Artifact
+      - name: Upload JSON file as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: player-data
+          path: player_data.json
