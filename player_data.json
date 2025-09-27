@@ -112,16 +112,8 @@
         "id": "1621"
     },
     {
-        "name": "Batcake",
-        "id": "297"
-    },
-    {
         "name": "Sgt",
         "id": "2867"
-    },
-    {
-        "name": "Thunder",
-        "id": "3222"
     },
     {
         "name": "henry",
@@ -148,6 +140,10 @@
         "id": "102"
     },
     {
+        "name": "Batcake",
+        "id": "297"
+    },
+    {
         "name": "Slicc",
         "id": "3962"
     },
@@ -158,6 +154,10 @@
     {
         "name": "bob",
         "id": "381"
+    },
+    {
+        "name": "Thunder",
+        "id": "3222"
     },
     {
         "name": "JakOfSpades",
@@ -2804,7 +2804,7 @@
         "id": "5909"
     },
     {
-        "name": "YRN Lingo",
+        "name": "Lloyd",
         "id": "1870"
     },
     {
