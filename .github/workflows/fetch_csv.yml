@@ -32,7 +32,7 @@ jobs:
           import json
           import os
 
-          CSV_PAGE_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_15.csv"
+          CSV_PAGE_URL = "https://mkwlounge.gg/csv/leaderboard_ladder_id_17.csv"
           OUTPUT_JSON_FILE = "player_data.json"
 
           def fetch_and_process_csv():
