@@ -151,17 +151,13 @@
                 const raw = localStorage.getItem(STORAGE_KEY);
                 if (raw) {
                     const cached = JSON.parse(raw);
-                    // Optionally ensure cached entry corresponds to same player/ladder — this example shows it regardless.
+                    // Show only the ratings and change values — no timestamp or extra message
                     const lrChangeColor = parseFloat(cached.lrChange) >= 0 ? "gain" : "loss";
                     const mmrChangeColor = parseFloat(cached.mmrChange) >= 0 ? "gain" : "loss";
-
-                    const ageSeconds = Math.floor((Date.now() - (cached.timestamp || 0)) / 1000);
-                    const ageText = ageSeconds >= 0 ? `Cached ${ageSeconds}s ago` : '';
 
                     const formattedStats = `
                         LR: ${cached.lr}<sup class="${lrChangeColor}">${cached.lrChange}</sup>
                         MMR: ${cached.mmr}<sup class="${mmrChangeColor}">${cached.mmrChange}</sup>
-                        <span class="cached">${ageText} — showing last known values</span>
                     `;
                     document.getElementById('player-stats').innerHTML = formattedStats;
                 } else {
