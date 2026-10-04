@@ -1,0 +1,40 @@
+name: Refresh Lounge Rating data
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # every 6 hours
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Update player data
+        run: |
+          node -e "
+          const fs = require('fs');
+          const https = require('https');
+
+          const url = 'https://mkwlounge.gg/ladder/';
+          https.get(url, (res) => {
+            let data = '';
+            res.on('data', (chunk) => data += chunk);
+            res.on('end', () => {
+              // parse and save the player data you need
+              fs.writeFileSync('player_data.json', JSON.stringify({ generated: true, source: url, data }, null, 2));
+              console.log('player data refreshed');
+            });
+          }).on('error', (err) => {
+            console.error(err);
+            process.exit(1);
+          });
+          "
